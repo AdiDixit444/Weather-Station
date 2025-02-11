@@ -1,1 +1,1 @@
-# Weather-Station
+This wireless weather station project monitors and displays real-time weather data, including temperature, humidity, pressure, and air quality, on an LCD screen. Additionally, it utilizes Bluetooth communication to transmit this data to a mobile application.
