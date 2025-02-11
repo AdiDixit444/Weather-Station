@@ -1,0 +1,74 @@
+ #include <dht.h>
+ #include <Wire.h>             // include Wire library, required for I2C devices
+#include <Adafruit_Sensor.h>  // include Adafruit sensor library
+#include <Adafruit_BMP280.h>  // include adafruit library for BMP280 sensor
+ #include <LiquidCrystal_I2C.h>
+
+ 
+#define BMP280_I2C_ADDRESS  0x76 //SCL Pin to A5 SDA Pin to A4
+ LiquidCrystal_I2C lcd(0x27,16,2); 
+ 
+Adafruit_BMP280 bmp280;
+
+dht DHT;
+
+#define DHT11_PIN 7
+
+int sensorValue;
+void setup(){ 
+ Serial.begin(9600);                            
+ 
+  lcd.init();        
+  lcd.backlight();
+  
+   if (!bmp280.begin(BMP280_I2C_ADDRESS))
+  {  
+    Serial.println("Could not find a valid BMP280 sensor, check wiring!");
+    while (1);
+  }
+
+  lcd.clear();  
+  lcd.setCursor(1,0); 
+  lcd.print("Welcome to ");
+  lcd.setCursor(1,1); 
+  lcd.print("Weather Station ");
+  delay(2000);
+
+}
+ 
+  void loop(){
+  int chk = DHT.read11(DHT11_PIN);
+  float pressure = bmp280.readPressure();     // get pressure
+  
+ sensorValue = analogRead(0);                  // read analog input pin 0
+
+ 
+  
+  Serial.print(DHT.temperature);
+  Serial.print("-");
+  Serial.print(DHT.humidity);
+  Serial.print("-");
+  Serial.print(pressure/100);
+  Serial.print("-");
+  Serial.print(sensorValue, DEC);
+  Serial.print("-");
+
+  lcd.clear();  
+  lcd.setCursor(0,0); 
+  lcd.print("Temp."); lcd.print("="); lcd.print(DHT.temperature);  lcd.print("*C");
+  lcd.setCursor(0,1); 
+  lcd.print("Humidity"); lcd.print("="); lcd.print(DHT.humidity); lcd.print("%");
+
+    delay(2000);
+    
+  lcd.clear();  
+  lcd.setCursor(0,0); 
+  lcd.print("Press."); lcd.print("="); lcd.print(pressure/100);  lcd.print("mbar");
+  lcd.setCursor(0,1); 
+  lcd.print("AQI"); lcd.print("="); lcd.print(sensorValue, DEC); lcd.print("ppm");
+ 
+  
+  delay(2000);
+   lcd.clear();
+        
+}
